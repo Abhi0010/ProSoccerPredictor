@@ -6,34 +6,21 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'register.css' %}">
 
-<div class="jumbotron">
-    <br><br><br><br>
-    <div>
-        <h1 class="display-4" >WELCOME TO Model3D!</h1>
-        <p class="lead">Start with a 7-day free trial, cancel any time</p>
-        <hr class="my-4">
-        <p>-Hundreds of 3D models</p>
-        <p>-Access to blender files.</p>
-    </div>
-</div>
+<body style="background:url('https://wallpapercave.com/wp/qHXu91n.jpg')  no-repeat;
+    background-size: cover;">
 
 
 
 <div class="form"> 
-    <h2 class="display-4" style="color: burlywood;">Personal Info</h2>
-    <br>
+    <div class="header-text">
+        <h5><font face="Calibri">Personal Information</font></h5>
+
+    </div>
     <form action="" method="post">
         {% csrf_token %}
-        <!-- <div class="form-group">
-            <label for="exampleInputEmail1">Name</label>
-            <input type="number" class="form-control" id="exampleInputEmail1" name="name" required>
-            
-        </div>  -->
-
-        <br>
 
         <div class="form-group">
-            <label for="exampleInputEmail1">Username</label>
+            <!-- <label for="exampleInputEmail1">Username</label> -->
             {{form.username}}
             <!-- <input type="text" class="form-control" id="exampleInputEmail1" placeholder="-user1234" name="username" required> -->
             <!-- <small id="emailHelp" class="form-text text-muted">*Username should be unique.</small> -->
@@ -41,7 +28,7 @@
         </div>
 
         <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
+        <!-- <label for="exampleInputEmail1">Email address</label> -->
         {{form.email}}
         <!-- <input type="email" class="form-control" id="exampleInputEmail1" placeholder="-username@gmail.com" name="email" required> -->
         <!-- <small id="emailHelp" class="form-text text-muted">*We'll never share your email with anyone else.</small> -->
@@ -51,7 +38,7 @@
         
 
         <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
+        <!-- <label for="exampleInputPassword1">Password</label> -->
         {{form.password1}}
         <!-- <input type="password" class="form-control" id="exampleInputPassword1" name="password" required> -->
         <!-- <small id="emailHelp" class="form-text text-muted">*Atleast 8-10 characters including 1 uppercase,1 special character and 1 number.</small> -->
@@ -59,18 +46,17 @@
         </div>
 
         <div class="form-group">
-            <label for="exampleInputPassword1">Re-Enter Password</label>
+            <!-- <label for="exampleInputPassword1">Re-Enter Password</label> -->
             {{form.password2}}
             <!-- <input type="password" class="form-control" id="exampleInputPassword1" name="confirmpassword" required> -->
             <!-- <small id="emailHelp" class="form-text text-muted">*Should match the above entered password.</small> -->
             
         
-        <br>
-        
         <div class="but">
         <button type="submit" class="btn btn-dark btn-lg">CREATE MY ACCOUNT</button>
         </div>
 
+        <br>
         {{form.errors}}
         
         <div class="d-flex justify-content-center links">

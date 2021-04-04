@@ -43,49 +43,52 @@ def contact(request):
 
 
 def register(request):
-	if request.user.is_authenticated:
-		return redirect('soccer-home')
-	else:
-		form = CreateUserForm()
-		if request.method == 'POST':
-			form = CreateUserForm(request.POST)
-			if form.is_valid():
-				form.save()
-				user = form.cleaned_data.get('username')
-				messages.success(request, 'Account was created for ' + user)
+    if request.user.is_authenticated:
+        return redirect('soccer-home')
+    else:
+        form = CreateUserForm()
+        if request.method == 'POST':
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(request, 'Account was created for ' + user)
 
-				return redirect('soccer-login')
-			
+                return redirect('soccer-login')
 
-		context = {'form':form}
-	return render(request, 'ProSoccerPredictor/register.html', context)
+        context = {'form': form}
+    return render(request, 'ProSoccerPredictor/register.html', context)
+
 
 def loginUser(request):
-	if request.user.is_authenticated:
-		return redirect('soccer-home')
-	else:
-		if request.method == 'POST':
-			username = request.POST.get('username')
-			password =request.POST.get('password')
+    if request.user.is_authenticated:
+        return redirect('soccer-home')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-			user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=username, password=password)
 
-			if user is not None:
-				login(request, user)
-				return redirect('soccer-home')
-			else:
-				messages.info(request, 'Username OR password is incorrect')
+            if user is not None:
+                login(request, user)
+                return redirect('soccer-home')
+            else:
+                messages.info(request, 'Username OR password is incorrect')
 
-		context = {}
-		return render(request, 'ProSoccerPredictor/login.html', context)
+        context = {}
+        return render(request, 'ProSoccerPredictor/login.html', context)
+
 
 def logoutUser(request):
-	logout(request)
-	return redirect('soccer-login')
+    logout(request)
+    return redirect('soccer-login')
+
 
 @login_required(login_url='soccer-login')
 def myprofile(request):
     return render(request, 'ProSoccerPredictor/myprofile.html')
+
 
 @login_required(login_url='soccer-login')
 def predictor(request):
@@ -150,7 +153,8 @@ def prediction(request):
         outcome = awayteam
     else:
         outcome = 'Draw'
-    dic = [{'win': outcome, 'home_goals': result1, 'away_goals': result2}]
+    dic = [{'win': outcome, 'home_goals': result1,
+            'away_goals': result2, 'hometeam': hometeam, 'awayteam': awayteam}]
     # dic=df2.to_dict('records')
 
     context = {

@@ -8,7 +8,6 @@ urlpatterns = [
     path('login/', views.loginUser, name='soccer-login'),
     path('logout/', views.logoutUser, name='soccer-logout'),
     path('register/', views.register, name='soccer-register'),
-    path('myprofile/', views.myprofile, name='soccer-myprofile'),
     path('prediction/', views.prediction, name='soccer-prediction'),
     path('analysis/', views.analysis, name='soccer-analysis'),
     path('predictor/', views.predictor, name='soccer-predictor')
