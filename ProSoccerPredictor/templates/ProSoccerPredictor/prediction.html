@@ -1,0 +1,9 @@
+{% extends 'ProSoccerPredictor/base.html' %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'form.css' %}"> -->
+
+{% block content %}
+{% for con in post %}
+Result: {{ con.win }} Wins! <br>
+{{con.home_goals}}-{{con.away_goals}}
+{% endfor %}
+{% endblock content %}

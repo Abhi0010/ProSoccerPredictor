@@ -1,0 +1,112 @@
+{% extends 'ProSoccerPredictor/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'register.css' %}">
+
+<div class="jumbotron">
+    <br><br><br><br>
+    <div>
+        <!-- <h1 class="display-4" >WELCOME TO Model3D!</h1>
+        <p class="lead">Start with a 7-day free trial, cancel any time</p>
+        <hr class="my-4">
+        <p>-Hundreds of 3D models</p>
+        <p>-Access to blender files.</p> -->
+    </div>
+</div>
+
+
+
+<div class="form"> 
+    <h2 class="display-4" style="color: burlywood;">Personal Info</h2>
+    <br>
+    <form action="" method="post">
+        <div class="form-row">
+            <div class="col">
+            <input type="text" class="form-control" placeholder="First name" name="fname" required>
+            <span class="error"><?php echo $fnameErr;?></span>
+            
+                </div>
+            <div class="col">
+            <input type="text" class="form-control" placeholder="Last name" name="lname" required>
+            <span class="error"><?php echo $lnameErr;?></span>
+            </div>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Age</label>
+            <input type="number" class="form-control" id="exampleInputEmail1" name="age" required>
+            <span class="error"><?php echo $ageErr;?></span>
+        </div>
+        <br>
+        <fieldset class="form-group">
+            <div class="row">
+                <legend class="col-form-label col-sm-2 pt-0" style="color: burlywood;">Gender</legend>
+                <div class="col-sm-10">
+                    <input type="radio" name="gender" value="male"> <label>Male</label>  
+                    <input type="radio" name="gender" value="female"> <label>Female</label>  
+                    <input type="radio" name="gender" value="other"><label>Other</label>  
+                    <span class="error"><?php echo $genderErr; ?> </span>
+                </div>
+            </div>  
+        </fieldset>
+
+        <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="-username@gmail.com" name="email" required>
+        <small id="emailHelp" class="form-text text-muted">*We'll never share your email with anyone else.</small>
+        <span class="error"><?php echo $emailErr;?></span>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="-user1234" name="username" required>
+            <small id="emailHelp" class="form-text text-muted">*Username should be unique.</small>
+            <span class="error"><?php echo $usernameErr;?></span>
+        </div>
+
+        <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+        <small id="emailHelp" class="form-text text-muted">*Atleast 8-10 characters including 1 uppercase,1 special character and 1 number.</small>
+        <span class="error"><?php echo $passwordErr;?></span>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleInputPassword1">Re-Enter Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" name="confirmpassword" required>
+            <small id="emailHelp" class="form-text text-muted">*Should match the above entered password.</small>
+            <span class="error"><?php echo $confirmpasswordErr;?></span>
+        </div>
+        <p class="lead" style="color: burlywood;">Location</p>
+        <div class="form-row">
+            <div class="col-7">
+            <input type="text" class="form-control" placeholder="City" name="city">
+            <span class="error"><?php echo $cityErr;?></span>
+            </div>
+            <div class="col">
+            <input type="text" class="form-control" placeholder="Country" name="country">
+            <span class="error"><?php echo $countryErr;?></span>
+            </div>
+            <div class="col">
+            <input type="text" class="form-control" placeholder="Zip" name="zipcode">
+            <span class="error"><?php echo $zipcodeErr;?></span>
+            </div>
+        </div>
+
+        <br>
+        <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+        <label class="form-check-label" for="exampleCheck1">I Agree to the terms and conditions</label>
+        </div>
+
+        <div class="but">
+        <button type="submit" class="btn btn-dark btn-lg">CREATE MY ACCOUNT</button>
+        </div>
+        
+    </form>
+</div>
+{% endblock content %}
