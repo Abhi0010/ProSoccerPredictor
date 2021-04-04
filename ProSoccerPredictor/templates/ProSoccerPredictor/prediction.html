@@ -1,9 +1,35 @@
 {% extends 'ProSoccerPredictor/base.html' %}
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'form.css' %}"> -->
+
 
 {% block content %}
-{% for con in post %}
-Result: {{ con.win }} Wins! <br>
-{{con.home_goals}}-{{con.away_goals}}
-{% endfor %}
-{% endblock content %}
+{% load static %}
+<style>
+    .pred{
+    background-image: url("https://i.pinimg.com/originals/eb/a3/4a/eba34aa3fa02f6f99c915fde6b162fb6.jpg");
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    display: block;
+    /* filter: blur(1px); */
+   }
+</style>
+
+
+    {% for con in post %}
+    Result: {{ con.win }} Wins! <br>
+    {{con.home_goals}}-{{con.away_goals}}
+    <div class="pred">
+        
+    </div>
+    
+    {% endfor %}
+
+
+    {% endblock content %}
+    

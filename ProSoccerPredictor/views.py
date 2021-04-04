@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.forms import inlineformset_factory
 from django.http import HttpResponse
 import pandas as pd
 import csv
@@ -17,6 +18,16 @@ import matplotlib.pyplot as plt
 import io
 import urllib
 import base64
+import warnings
+from .models import *
+from .forms import CreateUserForm
+
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+
+from django.contrib import messages
+
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -31,22 +42,57 @@ def contact(request):
     return render(request, 'ProSoccerPredictor/contact.html')
 
 
-def login(request):
-    return render(request, 'ProSoccerPredictor/login.html')
-
-
 def register(request):
-    return render(request, 'ProSoccerPredictor/register.html')
+	if request.user.is_authenticated:
+		return redirect('soccer-home')
+	else:
+		form = CreateUserForm()
+		if request.method == 'POST':
+			form = CreateUserForm(request.POST)
+			if form.is_valid():
+				form.save()
+				user = form.cleaned_data.get('username')
+				messages.success(request, 'Account was created for ' + user)
 
+				return redirect('soccer-login')
+			
 
+		context = {'form':form}
+	return render(request, 'ProSoccerPredictor/register.html', context)
+
+def loginUser(request):
+	if request.user.is_authenticated:
+		return redirect('soccer-home')
+	else:
+		if request.method == 'POST':
+			username = request.POST.get('username')
+			password =request.POST.get('password')
+
+			user = authenticate(request, username=username, password=password)
+
+			if user is not None:
+				login(request, user)
+				return redirect('soccer-home')
+			else:
+				messages.info(request, 'Username OR password is incorrect')
+
+		context = {}
+		return render(request, 'ProSoccerPredictor/login.html', context)
+
+def logoutUser(request):
+	logout(request)
+	return redirect('soccer-login')
+
+@login_required(login_url='soccer-login')
 def myprofile(request):
     return render(request, 'ProSoccerPredictor/myprofile.html')
 
-
+@login_required(login_url='soccer-login')
 def predictor(request):
     return render(request, 'ProSoccerPredictor/predictor.html')
 
 
+@login_required(login_url='soccer-login')
 def prediction(request):
     df = pd.read_csv("dataset_preprocess.csv")
     dic = []
@@ -110,10 +156,10 @@ def prediction(request):
     context = {
         'post': dic
     }
-
     return render(request, 'ProSoccerPredictor/prediction.html', context)
 
 
+@login_required(login_url='soccer-login')
 def analysis(request):
     data = pd.read_csv("data.csv")
 
@@ -147,141 +193,145 @@ def analysis(request):
 
 # 1. Analysing players on the basis of preferred foot (Right or Left)
     plt.rcParams['figure.figsize'] = (20, 10)
-    plt.title('Analysis on the basis of preferred foot of the players', fontsize=40)
     ax = sns.countplot(data['Preferred Foot'], palette='Greens')
+    ax.set_title(
+        label='Analysing players on the basis of preferred foot', fontsize=30)
 
     # convert graph into dtring buffer and then we convert 64 bit code into image
     buf = io.BytesIO()
     ax.figure.savefig(buf, format='png')
     buf.seek(0)
     string = base64.b64encode(buf.read())
-    uri = urllib.parse.quote(string)
-    return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
+    uri1 = urllib.parse.quote(string)
+
+    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
 
 # 2. Analysis based on different player positions
 
-    # plt.figure(figsize = (20, 8))
-    # ax = sns.countplot('Position', data = data, palette = 'bone')
-    # ax.set_xlabel(xlabel = 'Different Positions in Football', fontsize = 16)
-    # ax.set_ylabel(ylabel = 'Player Count', fontsize = 16)
-    # ax.set_title(label = 'Analysis based on different player positions', fontsize = 30)
+    plt.figure(figsize=(20, 8))
+    ax = sns.countplot('Position', data=data, palette='bone')
+    ax.set_xlabel(xlabel='Different Positions in Football', fontsize=16)
+    ax.set_ylabel(ylabel='Player Count', fontsize=16)
+    ax.set_title(
+        label='Analysis based on different player positions', fontsize=30)
 
-   # convert graph into dtring buffer and then we convert 64 bit code into image
-    # buf = io.BytesIO()
-    # ax.figure.savefig(buf, format='png')
-    # buf.seek(0)
-    # string = base64.b64encode(buf.read())
-    # uri = urllib.parse.quote(string)
-    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
+#    convert graph into dtring buffer and then we convert 64 bit code into image
+    buf = io.BytesIO()
+    ax.figure.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri2 = urllib.parse.quote(string)
 
-# 3. Analysing the players on the basis of Wages
+# 3. Analysis based on Work rate of the players
 
-    # Defining a function for cleaning the wage column
+    plt.figure(figsize=(15, 7))
+    ax = sns.countplot(x='Work Rate', data=data, palette='husl')
+    plt.title('Analysis based on Work rate of the players', fontsize=20)
+    plt.xlabel('Work rates associated with the players', fontsize=20)
+    plt.ylabel('Count of Players', fontsize=16)
 
-    # def extract_value_from(Value):
-    #     out = Value.replace('€', '')
-    #     if 'M' in out:
-    #         out = float(out.replace('M', ''))*1000000
-    #     elif 'K' in Value:
-    #         out = float(out.replace('K', ''))*1000
-    #     return float(out)
-
-    # #Applying the function to the wage column
-
-    # data['Value'] = data['Value'].apply(lambda x: extract_value_from(x))
-    # data['Wage'] = data['Wage'].apply(lambda x: extract_value_from(x))
-
-    # data['Wage'].head()
-
-    # import warnings
-    # warnings.filterwarnings('ignore')
-
-    # plt.rcParams['figure.figsize'] = (15, 5)
-    # ax = sns.distplot(data['Wage'], color = 'red')
-    # plt.xlabel('Wage Range for Players', fontsize = 16)
-    # plt.ylabel('Count of the Players', fontsize = 16)
-    # plt.title('Analysis of Wages of Players', fontsize = 30)
-    # plt.xticks(rotation = 90)
-
-    # # convert graph into dtring buffer and then we convert 64 bit code into image
-    # buf = io.BytesIO()
-    # ax.figure.savefig(buf, format='png')
-    # buf.seek(0)
-    # string = base64.b64encode(buf.read())
-    # uri = urllib.parse.quote(string)
-
-    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
+    # convert graph into dtring buffer and then we convert 64 bit code into image
+    buf = io.BytesIO()
+    ax.figure.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri3 = urllib.parse.quote(string)
 
 # 4 . Analysis based on skill moves of Players
 
-    # plt.figure(figsize = (10, 8))
-    # ax = sns.countplot(x = 'Skill Moves', data = data, palette = 'bright')
-    # ax.set_title(label = 'Analysis of players on basis of their skill moves', fontsize = 20)
-    # ax.set_xlabel(xlabel = 'Number of Skill Moves', fontsize = 16)
-    # ax.set_ylabel(ylabel = 'Count', fontsize = 16)
-    # # convert graph into dtring buffer and then we convert 64 bit code into image
-    # buf = io.BytesIO()
-    # ax.figure.savefig(buf, format='png')
-    # buf.seek(0)
-    # string = base64.b64encode(buf.read())
-    # uri = urllib.parse.quote(string)
+    plt.figure(figsize=(10, 8))
+    ax = sns.countplot(x='Skill Moves', data=data, palette='bright')
+    ax.set_title(
+        label='Analysis of players on basis of their skill moves', fontsize=20)
+    ax.set_xlabel(xlabel='Number of Skill Moves', fontsize=16)
+    ax.set_ylabel(ylabel='Count', fontsize=16)
+    # convert graph into dtring buffer and then we convert 64 bit code into image
+    buf = io.BytesIO()
+    ax.figure.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri4 = urllib.parse.quote(string)
 
-    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
+# 5 . # defining a function for cleaning the Weight data
 
-# 5 . Analysing players on basis of height
-
-    # plt.figure(figsize=(15, 10))
-    # ax = sns.countplot(x='Height', data=data, palette='muted')
-    # ax.set_title(
-    #     label='Analysis of players based on their height', fontsize=20)
-    # ax.set_xlabel(xlabel='Height in Foot per inch', fontsize=16)
-    # ax.set_ylabel(ylabel='Count', fontsize=16)
-    # # convert graph into dtring buffer and then we convert 64 bit code into image
-    # buf = io.BytesIO()
-    # ax.figure.savefig(buf, format='png')
-    # buf.seek(0)
-    # string = base64.b64encode(buf.read())
-    # uri = urllib.parse.quote(string)
-
-    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
-
-    # def extract_value_from(value):
-    # out = value.replace('lbs', '')
-    # return float(out)
-
-# 6 .#Analysis based on body weight of the players
+    def extract_value_from(value):
+        out = value.replace('lbs', '')
+        return float(out)
     # applying the function to weight column
-    # defining a function for cleaning the Weight data
+    data['Weight'] = data['Weight'].apply(lambda x: extract_value_from(x))
 
-    # def extract_value_from(value):
-    #     out = value.replace('lbs', '')
-    #     return float(out)
+# Analysis based on body weight of the players
 
-    # data['Weight'] = data['Weight'].apply(lambda x: extract_value_from(x))
+    plt.figure(figsize=(20, 5))
+    plt.title('Analysis based on body weight of the players', fontsize=20)
+    plt.xlabel('Weights associated with the players', fontsize=20)
+    plt.ylabel('count of Players', fontsize=16)
+    sns.set_style("darkgrid")
+    ax = sns.distplot(data['Weight'], color='Black')
 
-    # data['Weight'].head()
+    # # convert graph into dtring buffer and then we convert 64 bit code into image
+    buf = io.BytesIO()
+    ax.figure.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri5 = urllib.parse.quote(string)
 
-    # plt.figure(figsize=(20, 5))
-    # sns.set_style("darkgrid")
-    # ax = sns.distplot(data['Weight'], color='Black')
-    # plt.title('Analysis based on body weight of the players', fontsize=20)
-    # plt.xlabel('Weights associated with the players', fontsize=20)
-    # plt.ylabel('count of Players', fontsize=16)
+    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
+
+    # Analysis based on potential scores of the players
+
+    x = data.Potential
+    plt.figure(figsize=(12, 8))
+    plt.style.use('seaborn-paper')
+    sns.set_style("darkgrid")
+    ax = sns.distplot(x, bins=58, kde=False, color='green')
+    ax.set_xlabel(xlabel="Potential Scores of players", fontsize=16)
+    ax.set_ylabel(ylabel='Number of players', fontsize=16)
+    ax.set_title(
+        label='Histogram for Potential Scores of Players', fontsize=20)
+
+    # convert graph into dtring buffer and then we convert 64 bit code into image
+    buf = io.BytesIO()
+    ax.figure.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri6 = urllib.parse.quote(string)
+
+    # 7 Analysis of overall scores of the players
+
+    # sns.set(style="dark", palette="deep", color_codes=True)
+    # x = data.Overall
+    # plt.figure(figsize=(12, 8))
+    # plt.style.use('ggplot')
+
+    # ax = sns.distplot(x, bins=52, kde=False, color='b')
+    # ax.set_xlabel(xlabel="Scores of players", fontsize=16)
+    # ax.set_ylabel(ylabel='Number of players', fontsize=16)
+    # ax.set_title(label='Histogram of players Overall Scores', fontsize=20)
 
     # # convert graph into dtring buffer and then we convert 64 bit code into image
     # buf = io.BytesIO()
     # ax.figure.savefig(buf, format='png')
     # buf.seek(0)
     # string = base64.b64encode(buf.read())
-    # uri = urllib.parse.quote(string)
+    # uri7 = urllib.parse.quote(string)
 
-    # return render(request, 'ProSoccerPredictor/analysis.html', {'data': uri})
+    # Analysis of different nations
 
-    # 7. Analysis based on Work rate of the players
+    # plt.style.use('dark_background')
+    # plt.title('Analysis of Different Nations Participating',
+    #           fontsize=30, fontweight=20)
+    # plt.xlabel('Name of The Country')
+    # plt.ylabel('count')
 
-    # plt.figure(figsize = (15, 7))
-    # sns.countplot(x = 'Work Rate', data = data, palette = 'husl')
-    # plt.title('Analysis based on Work rate of the players', fontsize = 20)
-    # plt.xlabel('Work rates associated with the players', fontsize = 20)
-    # plt.ylabel('Count of Players', fontsize = 16)
-    # plt.show()
+    # ax = data['Nationality'].value_counts().head(
+    #     80).plot.bar(color='red', figsize=(100, 70))
+
+    # # convert graph into dtring buffer and then we convert 64 bit code into image
+    # buf = io.BytesIO()
+    # ax.figure.savefig(buf, format='png')
+    # buf.seek(0)
+    # string = base64.b64encode(buf.read())
+    # uri8 = urllib.parse.quote(string)
+    plt.close('all')
+    return render(request, 'ProSoccerPredictor/analysis.html', {'data1': uri1, 'data2': uri2, 'data3': uri3, 'data4': uri4, 'data5': uri5, 'data6': uri6})

@@ -43,24 +43,33 @@ body {
 }
 .form-box input {
   margin: 10px 0px;
+  background-color: #d9d9d9;
   border: none;
   padding: 10px;
   border-radius: 5px;
-  width: 100%;
+  width: 104%;
   font-size: 18px;
   font-family: poppins;
 }
 
 .form-box button {
-  background-color: rgb(71, 67, 66);
+  background-color: #737373;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  width: 95%;
+  width: 99.5%;
   font-size: 18px;
   padding: 10px;
   margin: 20px 0px;
+}
+
+button:hover {
+  background-color: black;
+}
+
+::placeholder {
+  color: #262626;
 }
 
 .autocomplete {
