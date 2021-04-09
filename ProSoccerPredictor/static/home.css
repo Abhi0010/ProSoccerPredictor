@@ -5,80 +5,80 @@
 } */
 
 body {
-    background-color:#171c21;
+  background-color: #171c21;
 }
 
-button{
-    width: 600px;
-    margin-top: 30px;
-}
+/* button {
+  width: 600px;
+  margin-top: 30px;
+} */
 
-#textback{
-    background: #008CBA;
+#textback {
+  background: #008cba;
 }
 
 #info {
-    color:#200610;
-    margin-top: 150px;
-    margin-bottom: 150px;
+  color: #200610;
+  margin-top: 150px;
+  margin-bottom: 150px;
 }
 
 section {
-    margin-top: 100px;
-    margin-bottom: 100px;
-    margin-left: 200px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  margin-left: 200px;
 }
 
 #infon input {
-    margin-top: 200px;
-    background-color: transparent;
-    
+  margin-top: 200px;
+  background-color: transparent;
 }
 
-
 .container {
-    position: relative;
-    width: 1000px;
-    height: 600px;
-    margin-top: 100px;
-    margin-bottom: 100px;
-  }
-  
-  .image {
+  position: relative;
+  width: 1000px;
+  height: 600px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+/* .image {
     border-radius: 20px;
     width: 970px;
     height: 600px;
-  }
-  
-  .overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color:transparent;
-    border-radius: 20px;
-    overflow: hidden;
-    width: 0;
-    height: 100%;
-    transition: .5s ease;
-    background-color: #171c21;
-    opacity: 0.7;
+  } */
 
-  }
-  
-  .container:hover .overlay {
-    width: 100%;
-    
-  }
-  
-  .text {
-    white-space: nowrap; 
-    color: white;
-    font-size: 20px;
-    position: absolute;
-    overflow: hidden;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-  }
+/* .overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 0;
+  height: 100%;
+  transition: 0.5s ease;
+  background-color: #171c21;
+  opacity: 0.7;
+}
+
+.container:hover .overlay {
+  width: 100%;
+} */
+
+.text {
+  white-space: nowrap;
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  overflow: hidden;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+img {
+  height: 550px;
+}

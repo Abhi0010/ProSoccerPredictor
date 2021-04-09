@@ -86,11 +86,6 @@ def logoutUser(request):
 
 
 @login_required(login_url='soccer-login')
-def myprofile(request):
-    return render(request, 'ProSoccerPredictor/myprofile.html')
-
-
-@login_required(login_url='soccer-login')
 def predictor(request):
     return render(request, 'ProSoccerPredictor/predictor.html')
 

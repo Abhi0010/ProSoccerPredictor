@@ -13,7 +13,7 @@
 
 <div class="form"> 
     <div class="header-text">
-        <h5><font face="Calibri">Personal Information</font></h5>
+        <h2 style="color: whitesmoke ; text-align: center; margin-bottom: 20px;">Create Account</h2>
 
     </div>
     <form action="" method="post">
@@ -57,12 +57,15 @@
         </div>
 
         <br>
-        {{form.errors}}
         
         <div class="d-flex justify-content-center links">
-            Already have an account? <a href="{% url 'soccer-login' %}" class="ml-2">Login</a>
+            <p style="color: white;">Already have an account?</p> <a href="{% url 'soccer-login' %}" class="ml-2">Login</a>
         </div>
     </form>
+    <!-- <div class="d-flex justify-content-center">
+
+    </div> -->
+    <h5 style="font-family: Playfair Display serif; font-size: 20   px; ;color: red;">{{form.errors}}</h5>
 </div>
 
 <script>
